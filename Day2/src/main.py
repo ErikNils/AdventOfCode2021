@@ -2,7 +2,6 @@
 # Above is path for 'Code Runner' extension. OBS!! Needs to be first it seems.
 import pandas as pd
 import os
-import numpy as np
 
 def Main():
     
@@ -20,6 +19,7 @@ def Main():
     x_pos = sum(forward_df["Units"])
     depth = sum(down_df["Units"]) - sum(up_df["Units"])
     
+    print("Part 1")
     print("Horizontal position: " + str(x_pos))
     print("Depth: " + str(depth))
     
@@ -27,7 +27,24 @@ def Main():
     
     #---------- Part 2 ----------------------------------------------------
     
+    aim = 0
+    # Just resetting values of coordinates
+    x_pos = 0
+    depth = 0
     
+    for row in df.itertuples():
+        if row.Command == "forward":
+            x_pos += row.Units
+            depth += row.Units*aim
+        elif row.Command == "up":
+            aim -= row.Units
+        elif row.Command == "down":
+            aim += row.Units
+            
+    print("\nPart 2: ")
+    print("Horizontal position: " + str(x_pos))
+    print("Depth: " + str(depth))
+    print("Product of horizontal position and depth: " + str(x_pos*depth))
 
  
 if __name__ == '__main__':
