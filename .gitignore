@@ -127,3 +127,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# --------- Below is my own shit -----------------------------------------------------
+.vscode/
+np
+os
+pd
+
