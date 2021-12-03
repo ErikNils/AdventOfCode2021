@@ -3,6 +3,45 @@
 import pandas as pd
 import os
 
+def gas_rating(df, gas):
+    if gas not in ["carbon","oxygen"]:
+        raise Exception("Invalid character in life support")
+        
+    
+    list = df["Bits"].tolist()
+    bit_counts = 0
+    
+    for index in range(len(df["Bits"].iloc[0])):
+        temp = []
+        bit_counts = 0
+        key_bit = None
+        
+        for bits in list:
+            if bits[index] == '1': bit_counts += 1
+            elif bits[index] == '0': bit_counts -= 1
+        
+        # Evaluate if key_bit is '0' or '1'
+        if bit_counts < 0:
+            if gas == "carbon": key_bit = '1'
+            elif gas == "oxygen": key_bit = '0'
+        else:
+            if gas == "carbon": key_bit = '0'
+            elif gas == "oxygen": key_bit = '1'
+        
+        # Append bitstrings, whos bit matches key_bit, to the new list
+        for bits in list:
+            if bits[index] == key_bit: temp.append(bits)
+        
+        list = temp 
+        print("Length of list: " + str(len(list)))
+        if len(list) < 2:
+            break
+        
+        
+    return list[0]
+        
+        
+
 def Main():
     
     # Path that works from any computer
@@ -18,11 +57,13 @@ def Main():
         for index, bit in enumerate(row.Bits):
             if bit == "1":
                 list[index] += 1
-            elif bit == "0": list[index] -= 1
+            elif bit == "0":
+                list[index] -= 1
     
     gamma_string = ""
     epsilon_string = ""
     
+    # Convert list of bits counted into corresponding bitstrings
     for index, bit in enumerate(list):
         if bit > 0:
             gamma_string += '1'
@@ -34,6 +75,7 @@ def Main():
     #print(gamma_string)
     #print(epsilon_string)
     
+    # Convert bitstring to int
     gamma = int(gamma_string,2)
     epsilon = int(epsilon_string,2)
     
@@ -43,7 +85,16 @@ def Main():
     
     #------------- Part 2 -----------------------------
     
-   
+    oxygen_str = gas_rating(df, "oxygen")
+    carbon_str = gas_rating(df, "carbon")
+    
+    oxygen = int(oxygen_str, 2)
+    carbon = int(carbon_str, 2)
+
+    print("Oxygen rating: " + str(oxygen))
+    print("Carbon rating: " + str(carbon))
+    print("Life support rating: " + str(carbon*oxygen))
+    
 
  
 if __name__ == '__main__':
