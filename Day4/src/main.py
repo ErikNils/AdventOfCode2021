@@ -82,7 +82,8 @@ def Main():
     
     
     score = score_counter(winner)
-    print("The first winner has the score: " + str(score))
+    print("Part 1:")
+    print("The first winner has the score: " + str(score) + "\n")
                         
     #--------------- Part 2 ----------------------------------------
     
@@ -94,6 +95,7 @@ def Main():
             winner = check_board(board, num, board_winners, index)
    
     score = score_counter(winner)
+    print("Part 2:")
     print("Last board to win has a the score: " + str(score))
 
  

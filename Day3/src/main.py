@@ -33,10 +33,8 @@ def gas_rating(df, gas):
             if bits[index] == key_bit: temp.append(bits)
         
         list = temp 
-        print("Length of list: " + str(len(list)))
         if len(list) < 2:
             break
-        
         
     return list[0]
         
@@ -71,17 +69,15 @@ def Main():
         else: 
             gamma_string += '0'
             epsilon_string += '1'
-    #print(list)
-    #print(gamma_string)
-    #print(epsilon_string)
     
     # Convert bitstring to int
     gamma = int(gamma_string,2)
     epsilon = int(epsilon_string,2)
     
+    print("Part 1:")
     print("Epsilon: " + str(epsilon))
     print("Gamma: " + str(gamma))
-    print("Power consumption: " + str(epsilon*gamma))
+    print("Power consumption: " + str(epsilon*gamma) + "\n")
     
     #------------- Part 2 -----------------------------
     
@@ -91,6 +87,7 @@ def Main():
     oxygen = int(oxygen_str, 2)
     carbon = int(carbon_str, 2)
 
+    print("Part 2:")
     print("Oxygen rating: " + str(oxygen))
     print("Carbon rating: " + str(carbon))
     print("Life support rating: " + str(carbon*oxygen))
