@@ -38,11 +38,11 @@ def lines(df, board, diag = True):
                     
                     
 def overlaps(board):
-    overlaps = 0
+    overlap = 0
     for row in board:
         for col in row:
-            if col > 1: overlaps += 1
-    return overlaps
+            if col > 1: overlap += 1
+    return overlap
     
     
 

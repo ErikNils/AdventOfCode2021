@@ -8,7 +8,7 @@ def gas_rating(df, gas):
         raise Exception("Invalid character in life support")
         
     
-    list = df["Bits"].tolist()
+    ls = df["Bits"].tolist()
     bit_counts = 0
     
     for index in range(len(df["Bits"].iloc[0])):
@@ -16,7 +16,7 @@ def gas_rating(df, gas):
         bit_counts = 0
         key_bit = None
         
-        for bits in list:
+        for bits in ls:
             if bits[index] == '1': bit_counts += 1
             elif bits[index] == '0': bit_counts -= 1
         
@@ -29,14 +29,14 @@ def gas_rating(df, gas):
             elif gas == "oxygen": key_bit = '1'
         
         # Append bitstrings, whos bit matches key_bit, to the new list
-        for bits in list:
+        for bits in ls:
             if bits[index] == key_bit: temp.append(bits)
         
-        list = temp 
-        if len(list) < 2:
+        ls = temp 
+        if len(ls) < 2:
             break
         
-    return list[0]
+    return ls[0]
         
         
 
@@ -47,22 +47,22 @@ def Main():
     abs_path = os.path.join(os.path.dirname(__file__), rel_path)
     df = pd.read_csv(abs_path, dtype=str)
     
-    # Creates a list full of zeroes the length of the bitstrings
-    list = [0]*len(df["Bits"].iloc[0])
+    # Creates a ls full of zeroes the length of the bitstrings
+    ls = [0]*len(df["Bits"].iloc[0])
     
     # Counts '1' and '0' in each position
     for row in df.itertuples():
         for index, bit in enumerate(row.Bits):
             if bit == "1":
-                list[index] += 1
+                ls[index] += 1
             elif bit == "0":
-                list[index] -= 1
+                ls[index] -= 1
     
     gamma_string = ""
     epsilon_string = ""
     
     # Convert list of bits counted into corresponding bitstrings
-    for index, bit in enumerate(list):
+    for index, bit in enumerate(ls):
         if bit > 0:
             gamma_string += '1'
             epsilon_string += '0'
