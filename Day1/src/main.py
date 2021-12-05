@@ -3,7 +3,7 @@ import pandas as pd
 import os
 import numpy as np
 
-def Main():
+def main():
 
     # Path that works from any computer
     rel_path = "../depth.csv"
@@ -46,4 +46,4 @@ def Main():
 
  
 if __name__ == '__main__':
-    Main()
+    main()

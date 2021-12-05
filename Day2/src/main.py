@@ -3,7 +3,7 @@
 import pandas as pd
 import os
 
-def Main():
+def main():
     
     # Path that works from any computer
     rel_path = "../commands.csv"
@@ -48,4 +48,4 @@ def Main():
 
  
 if __name__ == '__main__':
-    Main()
+    main()

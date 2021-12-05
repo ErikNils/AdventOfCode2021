@@ -5,7 +5,7 @@ import os
 import numpy as np
 
 # Oh god this looks ugly
-def diagonal(range_row, range_col, board):
+def _diagonal(range_row, range_col, board):
     col_incs = []
     row_incs = []
     
@@ -22,13 +22,13 @@ def diagonal(range_row, range_col, board):
         
         
         
-def lines(df, board, diag = True):
+def _lines(df, board, diag = True):
     for serie in df.itertuples():
         range_row = (serie.x1,serie.x2)
         range_col = (serie.y1,serie.y2)
         # If the line is diagonal we ignore it
         if max(range_row) != min(range_row) and max(range_col) != min(range_col): 
-            if diag: diagonal(range_row, range_col, board)
+            if diag: _diagonal(range_row, range_col, board)
             else: continue
         
         else:
@@ -37,7 +37,7 @@ def lines(df, board, diag = True):
                     board[row][col] += 1
                     
                     
-def overlaps(board):
+def _overlaps(board):
     overlap = 0
     for row in board:
         for col in row:
@@ -46,7 +46,7 @@ def overlaps(board):
     
     
 
-def Main():
+def main():
     
     # Path that works from any computer
     rel_path = "../lines.csv"
@@ -57,20 +57,20 @@ def Main():
     board = np.array([[0]*1000]*1000)
     
     # Exclude diagonals
-    lines(df,board, False)
+    _lines(df,board, False)
             
     print("Part 1:")
-    print("Overlaps excluding diagonals: " + str(overlaps(board)) + "\n")
+    print("Overlaps excluding diagonals: " + str(_overlaps(board)) + "\n")
     #--------------- Part 2 ----------------------------------------------------------------
     
     board = np.array([[0]*1000]*1000)
     
     # Include diagonals
-    lines(df, board)
+    _lines(df, board)
     
     print("Part 2:")
-    print("Overlaps including diagonals: " + str(overlaps(board)))
+    print("Overlaps including diagonals: " + str(_overlaps(board)))
     
  
 if __name__ == '__main__':
-    Main()
+    main()

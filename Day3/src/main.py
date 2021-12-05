@@ -3,7 +3,7 @@
 import pandas as pd
 import os
 
-def gas_rating(df, gas):
+def _gas_rating(df, gas):
     if gas not in ["carbon","oxygen"]:
         raise Exception("Invalid character in life support")
         
@@ -32,7 +32,7 @@ def gas_rating(df, gas):
         for bits in ls:
             if bits[index] == key_bit: temp.append(bits)
         
-        ls = temp 
+        ls = temp
         if len(ls) < 2:
             break
         
@@ -40,7 +40,7 @@ def gas_rating(df, gas):
         
         
 
-def Main():
+def main():
     
     # Path that works from any computer
     rel_path = "../bits.csv"
@@ -81,8 +81,8 @@ def Main():
     
     #------------- Part 2 -----------------------------
     
-    oxygen_str = gas_rating(df, "oxygen")
-    carbon_str = gas_rating(df, "carbon")
+    oxygen_str = _gas_rating(df, "oxygen")
+    carbon_str = _gas_rating(df, "carbon")
     
     oxygen = int(oxygen_str, 2)
     carbon = int(carbon_str, 2)
@@ -95,4 +95,4 @@ def Main():
 
  
 if __name__ == '__main__':
-    Main()
+    main()

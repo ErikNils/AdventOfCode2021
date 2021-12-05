@@ -1,23 +1,21 @@
 #!/usr/bin/python3
 # Above is path for 'Code Runner' extension. OBS!! Needs to be first it seems.
-import pandas as pd
 import os
 import numpy as np
 from Bingo_Number import Bingo_Number
 
 
-def board_bingo(board):
-    
+def _board_bingo(board):
     for row in range(len(board)):
         row_flag = True
         col_flag = True
         for col in range(len(board)):
-            if board[row][col].bingo == False: row_flag = False
-            if board[col][row].bingo == False: col_flag = False
+            if not board[row][col].bingo: row_flag = False
+            if not board[col][row].bingo: col_flag = False
         if row_flag or col_flag: return True
 
 
-def score_counter(board):
+def _score_counter(board):
     score = 0
     for row in board[0]:
         for col in row:
@@ -26,17 +24,17 @@ def score_counter(board):
     return score*int(board[1])
 
 
-def board_interpreter(path):
-    f = open(path,'r')
+def _board_interpreter(path):
+    file = open(path,'r')
     
     board_list = []
     board = []
     
-    bingo_nums = f.readline().rstrip().split(',')
+    bingo_nums = file.readline().rstrip().split(',')
     # Remove first empty line between bingo numbers and boards
-    f.readline()
+    file.readline()
     
-    for row in f:
+    for row in file:
         row_ls = row.strip().split()
         #print("Row_ls: " + str(row_ls))
         bingo_row = []
@@ -45,43 +43,43 @@ def board_interpreter(path):
             #print("Board: " + str(board))
             board_list.append(board)
             board = []
-        else: 
+        else:
             board.append(bingo_row)
-    f.close()
+    file.close()
     return board_list, bingo_nums
 
 
-def check_board(board, num, board_winners=None, index=None):
+def _check_board(board, num, board_winners=None, index=None):
     for row in board:
         for col in row:
-            if col.number == num:                      
+            if col.number == num:
                 col.bingo = True
-                if board_bingo(board):
+                if _board_bingo(board):
                     if board_winners: board_winners[index] = True
                     return (np.array(board), num)
 
 
 
-def Main():
+def main():
     
     # Path that works from any computer
     rel_path = "../bingo.txt"
     abs_path = os.path.join(os.path.dirname(__file__), rel_path)
     
     
-    board_list, bingo_nums = board_interpreter(abs_path)
+    board_list, bingo_nums = _board_interpreter(abs_path)
         
     winner = None
     
-    # Check all boards if they need to mark a number    
+    # Check all boards if they need to mark a number
     for num in bingo_nums:
         for board in board_list:
-            winner = check_board(board, num)
+            winner = _check_board(board, num)
             if winner: break
         if winner: break
     
     
-    score = score_counter(winner)
+    score = _score_counter(winner)
     print("Part 1:")
     print("The first winner has the score: " + str(score) + "\n")
                         
@@ -92,12 +90,12 @@ def Main():
     for num in bingo_nums:
         for index, board in enumerate(board_list):
             if board_winners[index]: continue
-            winner = check_board(board, num, board_winners, index)
+            winner = _check_board(board, num, board_winners, index)
    
-    score = score_counter(winner)
+    score = _score_counter(winner)
     print("Part 2:")
     print("Last board to win has a the score: " + str(score))
 
  
 if __name__ == '__main__':
-    Main()
+    main()
