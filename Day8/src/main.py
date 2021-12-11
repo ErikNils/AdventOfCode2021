@@ -29,45 +29,109 @@ def _count_outputs(segments):
 
 def _sum_output(segments):
     # This looks kinda fugly, ngl
-    ls = []
-    seg_codes = {}
-    ls.append("".join(sorted("cagedb")))
-    ls.append("".join(sorted("ab")))
-    ls.append("".join(sorted("gcdfa")))
-    ls.append("".join(sorted("fbcad")))
-    ls.append("".join(sorted("eafb")))
-    ls.append("".join(sorted("cdfbe")))
-    ls.append("".join(sorted("cdfgeb")))
-    ls.append("".join(sorted("dab")))
-    ls.append("".join(sorted("acedgfb")))
-    ls.append("".join(sorted("cefabd")))
     
-    for index, code in enumerate(ls):
-        print(code)
-        seg_codes[code] = index
-    print(seg_codes)
     result = 0
-    for outputs in segments:
+    for segment in segments:
+        x = _def_signals(segment)
+        ls = []
+        seg_codes = {}
+        # Getting the charactar combination for each value
+        ls.append("".join(sorted(x[0]+x[1]+x[2]+x[4]+x[5]+x[6])))
+        ls.append("".join(sorted(x[2]+x[5])))
+        ls.append("".join(sorted(x[0]+x[2]+x[3]+x[4]+x[6])))
+        ls.append("".join(sorted(x[0]+x[2]+x[3]+x[5]+x[6])))
+        ls.append("".join(sorted(x[1]+x[2]+x[3]+x[5])))
+        ls.append("".join(sorted(x[0]+x[1]+x[3]+x[5]+x[6])))
+        ls.append("".join(sorted(x[0]+x[1]+x[3]+x[4]+x[5]+x[6])))
+        ls.append("".join(sorted(x[0]+x[2]+x[5])))
+        ls.append("".join(sorted(x[0]+x[1]+x[2]+x[3]+x[4]+x[5]+x[6])))
+        ls.append("".join(sorted(x[0]+x[1]+x[2]+x[3]+x[5]+x[6])))
+
+        # Adding the char comb to a value in a dictionary
+        for index, code in enumerate(ls):
+            seg_codes[code] = index
+        print(seg_codes)
+        
         res = 0
-        for index, output in enumerate(outputs[1]):
+        for index, output in enumerate(segment[1]):
             code = "".join(sorted(output))
             print("This is the code: " + code)
-            this_shit = seg_codes[code]*pow(10,(len(outputs[1])-index-1))
+            this_shit = seg_codes[code]*pow(10,(len(segment[1])-index-1))
             print("This shit: " + str(this_shit))
             res += this_shit
         print("This is res: " + str(res))
         result += res
     return result
 
+
+
+
 # Need to map signals for each segment
 
+def _def_signals(segment):
+    segs = segment[0]+segment[1]
+    signals_list = []
+    for i in range(7):
+        signals_list.append([])
+    # First we add the signals to the places we know they can be
+    for signals in segs:
+        tmp = []
+        for signal in signals:
+                tmp.append(signal)
+        if len(tmp) == 2:
+            signals_list[2] = _overlaps(tmp,signals_list[2])
+            signals_list[5] = _overlaps(tmp,signals_list[5])
+        elif len(tmp) == 3:
+            signals_list[0] = _overlaps(tmp,signals_list[0])
+            signals_list[2] = _overlaps(tmp,signals_list[2])
+            signals_list[5] = _overlaps(tmp,signals_list[5])
+        elif len(tmp) == 4:
+            signals_list[1] = _overlaps(tmp,signals_list[1])
+            signals_list[2] = _overlaps(tmp,signals_list[2])
+            signals_list[3] = _overlaps(tmp,signals_list[3])
+            signals_list[5] = _overlaps(tmp,signals_list[5])
+        elif len(tmp) == 5:
+            signals_list[0] = _overlaps(tmp,signals_list[0])
+            signals_list[3] = _overlaps(tmp,signals_list[3])
+            signals_list[6] = _overlaps(tmp,signals_list[6])
+        elif len(tmp) == 6:
+            signals_list[0] = _overlaps(tmp,signals_list[0])
+            signals_list[1] = _overlaps(tmp,signals_list[1])
+            signals_list[5] = _overlaps(tmp,signals_list[5])
+            signals_list[6] = _overlaps(tmp,signals_list[6])
+        else:
+            continue
+    # Uses process of elimination to find remaining signals (yes this works for all segments)
+    signals_list[6].remove(signals_list[0][0])
+    signals_list[1].remove(signals_list[5][0])
+    signals_list[2].remove(signals_list[5][0])
+    tmp = ['a','b','c','d','e','f','g']
+    for signal in signals_list:
+        if signal == []: continue
+        tmp.remove(signal[0])
+    signals_list[4] = tmp
+    # Just removing one layer of 'list'
+    for i in range(7):
+        signals_list[i] = signals_list[i][0]
+    #print("List of signals: " + str(signals_list))
+    return signals_list
+
+                    
+    
+def _overlaps(signals1,signals2):
+    if signals2 == []: return signals1
+    new_signals = []
+    for signal in signals1:
+        if signal in signals2: new_signals.append(signal)
+    if new_signals == []: return signals2
+    else: return new_signals
 
 
 
 def main():
     
     # Path that works from any computer
-    rel_path = "../example.csv"
+    rel_path = "../segments.csv"
     abs_path = os.path.join(os.path.dirname(__file__), rel_path)
     
     segments = _read_file(abs_path)
