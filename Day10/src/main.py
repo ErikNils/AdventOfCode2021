@@ -1,8 +1,9 @@
 #!/usr/bin/python3
 # Above is path for 'Code Runner' extension. OBS!! Needs to be first it seems.
 import os
-from posixpath import abspath
 import numpy as np
+import math
+from collections import deque
 
 
 
@@ -10,45 +11,64 @@ import numpy as np
 
 def _read_file(path):
     file = open(path,'r')
-    
+    clean = []
+    corr = 0
+    discard = False
     for line in file:
         arr = list(line.strip())
-        print(arr)
+        tmp, discard = _corrupted(arr)
+        corr += tmp
+        if not discard: clean.append(arr)
     file.close()
-    return 
+    incomplete = _completion(clean)
+    
+    return corr,incomplete
 
 
 def _corrupted(arr):
-    para = 0
-    clam = 0
-    curl = 0
-    gap = 0
+    stack = deque()
+    values = {')':3,']':57,'}':1197,'>':25137}
     for ele in arr:
-        if ele == '(': para += 1
-        elif ele == ')':
-            para -= 1
-            if para < 0: return 3
-        elif ele == '[': clam += 1
-        elif ele == ']':
-            clam -= 1
-            if clam < 0: return 57
-        elif ele == '{': curl += 1
-        elif ele == '}':
-            curl -= 1
-            if curl < 0: return 1197
-        elif ele == '<': gap += 1
-        elif ele  == '>':
-            gap -= 1
-            if gap < 0: return 25137
+        if ele == '(': stack.append(')')
+        elif ele == '[': stack.append(']')
+        elif ele == '{': stack.append('}')
+        elif ele == '<': stack.append('>')
+        elif ele != stack.pop(): return values[ele],True
+    return 0,False
 
+
+def _completion(arrs):
+    scores = []
+    stack = deque()
+    values = {')':1,']':2,'}':3,'>':4}
+    for arr in arrs:
+        res = 0
+        for ele in arr:
+            if ele == '(': stack.append(')')
+            elif ele == '[': stack.append(']')
+            elif ele == '{': stack.append('}')
+            elif ele == '<': stack.append('>')
+            else: stack.pop()
+        while len(stack) > 0:
+            res *= 5
+            res += values[stack.pop()]
+        scores.append(res)
+    scores = sorted(scores)
+    return scores[(len(scores)//2)]
+        
 
 def main():
     
     # Path that works from any computer
-    rel_path = "../example.csv"
+    rel_path = "../chunks.csv"
     abs_path = os.path.join(os.path.dirname(__file__), rel_path)
     
-    _read_file(abs_path)
+    corr,incomplete = _read_file(abs_path)
+    print("Part 1:")
+    print("Corrupted score: " + str(corr) + "\n")
+    #------------- Part 2 ----------------------------------------
+    print("Part 2:")
+    print("Incomplete score: " + str(incomplete))
 
  
 if __name__ == '__main__':
