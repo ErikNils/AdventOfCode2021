@@ -1,8 +1,6 @@
 #!/usr/bin/python3
 # Above is path for 'Code Runner' extension. OBS!! Needs to be first it seems.
 import os
-import numpy as np
-import math
 from collections import deque
 
 
