@@ -18,6 +18,7 @@ def _read_file(path):
         for i,ele in enumerate(arr):
             arr[i] = Octopus(int(ele))
         matrix.append(arr)
+    file.close()
     return np.array(matrix)
 
 
